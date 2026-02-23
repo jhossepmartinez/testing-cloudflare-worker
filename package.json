@@ -1,0 +1,20 @@
+{
+  "name": "testing-cloudflare-worker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx esbuild ./src/index.ts --bundle --outdir=dist --format=esm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^1.42.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.3"
+  }
+}
