@@ -44,7 +44,7 @@ export default {
         },
       });
 
-      const answer = response.text ?? "";
+      const answer = response.text ?? "no answer";
 
       await db.insert(qaHistory).values({ question, answer });
 
