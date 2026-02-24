@@ -57,9 +57,9 @@ jobs:
           name: dist
           path: dist/
 
-      # - uses: hashicorp/setup-terraform@v3
-      #   with:
-      #     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - uses: hashicorp/setup-terraform@v3
+        # with:
+        #   cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       # - name: Authenticate git for private modules
       #   run: git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com".insteadOf "https://github.com"
