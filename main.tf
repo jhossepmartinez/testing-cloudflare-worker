@@ -17,6 +17,9 @@ resource "random_pet" "this" {}
 resource "cloudflare_d1_database" "this" {
   account_id = var.cloudflare_account_id
   name       = random_pet.this.id
+  read_replication = {
+    mode = "disabled"
+  }
 }
 
 module "worker" {

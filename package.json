@@ -5,17 +5,22 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx esbuild ./src/index.ts --bundle --outdir=dist --format=esm"
+    "build": "npx esbuild ./src/index.ts --bundle --outdir=dist --format=esm",
+    "apply": "npx dotenv -- terraform apply",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@github/copilot-sdk": "^0.1.26",
     "@google/genai": "^1.42.0",
     "dotenv": "^17.3.1",
-    "drizzle-orm": "^0.45.1",
-    "postgres": "^3.4.8"
+    "dotenv-cli": "^11.0.0",
+    "drizzle-orm": "^0.45.1"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.9",

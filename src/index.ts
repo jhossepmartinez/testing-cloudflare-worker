@@ -1,7 +1,14 @@
 import { GoogleGenAI, HarmBlockThreshold, HarmCategory } from "@google/genai";
+import { drizzle, DrizzleD1Database } from "drizzle-orm/d1";
+import { qaHistory } from "./db/schema";
+
+interface Env {
+  GOOGLE_API_KEY: string;
+  DB: DrizzleD1Database;
+}
 
 export default {
-  async fetch(request: Request, env) {
+  async fetch(request: Request, env: Env) {
     const url = new URL(request.url);
     const question = url.searchParams.get("question");
 
@@ -9,6 +16,8 @@ export default {
       return new Response("Missing the required 'question' query parameter.");
 
     const ai = new GoogleGenAI({ apiKey: env.GOOGLE_API_KEY });
+    const db = drizzle(env.DB);
+
     try {
       const response = await ai.models.generateContent({
         model: "gemini-3-flash-preview",
@@ -35,7 +44,11 @@ export default {
         },
       });
 
-      return new Response(`${response.text}`);
+      const answer = response.text ?? "";
+
+      await db.insert(qaHistory).values({ question, answer });
+
+      return new Response(answer);
     } catch (exception) {
       console.error("Message generation failed:", exception);
       return new Response(
