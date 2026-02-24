@@ -1,6 +1,7 @@
 terraform {
   cloud {
     organization = "answer-me"
+    token        = var.terraform_api_token
 
     workspaces {
       name = "cli-answer-me"
