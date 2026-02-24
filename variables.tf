@@ -27,3 +27,7 @@ variable "cloudflare_d1_database_id" {
   type        = string
   default     = ""
 }
+
+variable "terraform_api_token" {
+  type = string
+}

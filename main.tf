@@ -3,10 +3,15 @@ terraform {
     hostname     = "app.terraform.io"
     organization = "answer-me"
 
+    credentials "app.terraform.io" {
+      token = var.terraform_api_token
+    }
+
     workspaces {
-      name = "prod"
+      name = "cli-answer-me"
     }
   }
+
 
   required_version = ">= 1.5"
   required_providers {
@@ -16,6 +21,7 @@ terraform {
     }
   }
 }
+
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
