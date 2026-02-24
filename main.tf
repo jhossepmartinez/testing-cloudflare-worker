@@ -5,11 +5,27 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = ">= 5.17, < 6.0"
     }
+
+    supabase = {
+      source  = "supabase/supabase"
+      version = "~> 1.0"
+    }
   }
 }
 
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
+}
+
+provider "supabase" {
+  access_token = var.supabase_access_token
+}
+
+resource "supabase_project" "this" {
+  organization_id   = var.supabase_organization_slug
+  name              = "db"
+  database_password = "db-password"
+  region            = "us-east-1"
 }
 
 module "worker" {

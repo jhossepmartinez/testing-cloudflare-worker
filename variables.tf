@@ -21,3 +21,11 @@ variable "workers" {
 variable "google_api_key" {
   type = string
 }
+
+variable "supabase_access_token" {
+  type = string
+}
+
+variable "supabase_organization_slug" {
+  type = string
+}
