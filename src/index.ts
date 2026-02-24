@@ -13,7 +13,7 @@ export default {
     const question = url.searchParams.get("question");
 
     if (!question)
-      return new Response("Missing the required 'question' query parameter.");
+      return new Response("Missing required 'question' query parameter.");
 
     const ai = new GoogleGenAI({ apiKey: env.GOOGLE_API_KEY });
     const db = drizzle(env.DB);
