@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0](https://github.com/jhossepmartinez/testing-cloudflare-worker/compare/v1.0.0...v2.0.0) (2026-02-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* add d1 database to store questions and answers
+
+### Features
+
+* add d1 database to store questions and answers ([25632a7](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/25632a7db6f39b1ace7e1433af04552fff8838b2))
+* add supabase database resource ([52b0a97](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/52b0a97efcfd9c24713d0c8a73c9fcc50d147e80))
+* bring back d1 ([789ae4e](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/789ae4ee58430d6b2d2ebdb4ac3c384f2f668b77))
+
 ## 1.0.0 (2026-02-23)
 
 
