@@ -3,7 +3,7 @@ terraform {
     hostname     = "app.terraform.io"
     organization = "answer-me"
 
-    workspace {
+    workspaces {
       name = "prod"
     }
   }
