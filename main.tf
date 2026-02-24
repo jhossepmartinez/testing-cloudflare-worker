@@ -1,4 +1,13 @@
 terraform {
+  backend "remote" {
+    hostname     = "app.terraform.io"
+    organization = "answer-me"
+
+    workspace {
+      name = "prod"
+    }
+  }
+
   required_version = ">= 1.5"
   required_providers {
     cloudflare = {

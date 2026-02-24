@@ -21,3 +21,9 @@ variable "workers" {
 variable "google_api_key" {
   type = string
 }
+
+variable "cloudflare_d1_database_id" {
+  description = "Cloudflare D1 database ID (needed for Drizzle migrations)"
+  type        = string
+  default     = ""
+}
