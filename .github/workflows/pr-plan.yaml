@@ -33,6 +33,8 @@ jobs:
         run: npm run build
 
       - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
       #   with:
       #     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
