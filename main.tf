@@ -33,6 +33,7 @@ resource "cloudflare_d1_database" "this" {
 }
 
 module "worker" {
+  count              = 2
   source             = "github.com/jhossepmartinez/terraform-cloudflare-worker?ref=v0.2.0"
   account_id         = var.cloudflare_account_id
   compatibility_date = "2026-02-21"
