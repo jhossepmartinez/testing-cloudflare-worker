@@ -39,7 +39,7 @@ module "worker" {
   compatibility_date = "2026-02-21"
   main_module        = "index.js"
   main_module_path   = "dist/index.js"
-  name               = random_pet.this.id
+  name               = "${random_pet.this.id}-${count.index}"
   tags               = ["temp", "hihi"]
 
   bindings = [
