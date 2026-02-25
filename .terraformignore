@@ -1,0 +1,27 @@
+# Exclude everything by default, then whitelist what TFC needs.
+# TFC needs: environments/*, dist/, drizzle/ (for context), and any .tf files.
+
+# Dependencies
+node_modules/
+
+# Git internals
+.git/
+
+# Source files (TFC doesn't need to compile, the CI runner already built dist/)
+src/
+
+# Editor / OS noise
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Local secrets (never upload)
+.env
+*.tfvars
+!examples/**/*.tfvars
+
+# GitHub Actions (not needed on TFC)
+.github/

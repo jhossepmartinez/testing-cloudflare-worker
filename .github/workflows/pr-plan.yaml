@@ -10,14 +10,18 @@ permissions:
 
 jobs:
   plan:
-    name: Build & Plan
+    name: Plan (${{ matrix.environment }})
     runs-on: ubuntu-latest
-    environment: some
+    environment: staging
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [staging, production]
     env:
-      TF_VAR_terraform_api_token: ${{ secrets.TF_API_TOKEN }}
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       TF_VAR_google_api_key: ${{ secrets.GOOGLE_API_KEY }}
-      TF_VAR_cloudflare_d1_database_id: ${{ secrets.D1_DATABASE_ID }}
+      TF_VAR_main_module_path: dist/index.js
 
     steps:
       - uses: actions/checkout@v4
@@ -33,21 +37,22 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Stage dist for Terraform upload
+        run: cp -r dist environments/${{ matrix.environment }}/dist
+
       - uses: hashicorp/setup-terraform@v3
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      #   with:
-      #     cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      # - name: Authenticate git for private modules
-      #   run: git config --global url."https://oauth2:${GITHUB_TOKEN}@github.com".insteadOf "https://github.com"
+          terraform_wrapper: true
 
       - name: Terraform Init
         run: terraform init
+        working-directory: environments/${{ matrix.environment }}
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color 2>&1 | tee plan_output.txt
+        run: terraform plan -no-color
+        working-directory: environments/${{ matrix.environment }}
 
       - name: Find existing plan comment
         uses: peter-evans/find-comment@v3
@@ -56,7 +61,7 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: github-actions[bot]
-          body-includes: "## Terraform Plan"
+          body-includes: "## Terraform Plan — ${{ matrix.environment }}"
 
       - name: Post plan as PR comment
         uses: peter-evans/create-or-update-comment@v4
@@ -66,7 +71,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           edit-mode: replace
           body: |
-            ## Terraform Plan
+            ## Terraform Plan — ${{ matrix.environment }}
             <details><summary>Show Plan</summary>
 
             ```

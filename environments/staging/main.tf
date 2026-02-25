@@ -3,7 +3,7 @@ terraform {
     organization = "answer-me"
 
     workspaces {
-      name = "cli-answer-me"
+      name = "answer-me-staging"
     }
   }
 
@@ -17,30 +17,26 @@ terraform {
   }
 }
 
-
 provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-resource "random_pet" "this" {}
-
 resource "cloudflare_d1_database" "this" {
   account_id = var.cloudflare_account_id
-  name       = random_pet.this.id
+  name       = "${var.project}-staging"
   read_replication = {
     mode = "disabled"
   }
 }
 
 module "worker" {
-  count              = 2
   source             = "github.com/jhossepmartinez/terraform-cloudflare-worker?ref=v0.2.0"
   account_id         = var.cloudflare_account_id
   compatibility_date = "2026-02-21"
   main_module        = "index.js"
-  main_module_path   = "dist/index.js"
-  name               = "${random_pet.this.id}-${count.index}"
-  tags               = ["temp", "hihi"]
+  main_module_path   = var.main_module_path
+  name               = "${var.project}-staging"
+  tags               = ["staging"]
 
   bindings = [
     {
@@ -55,4 +51,3 @@ module "worker" {
     }
   ]
 }
-
