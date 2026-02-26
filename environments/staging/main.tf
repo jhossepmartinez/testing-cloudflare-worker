@@ -40,9 +40,9 @@ module "worker" {
 
   bindings = [
     {
-      name = "GOOGLE_API_KEY"
+      name = "OPENAI_API_KEY"
       type = "secret_text"
-      text = var.google_api_key
+      text = var.openai_api_key
     },
     {
       name = "DB"

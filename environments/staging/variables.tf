@@ -9,8 +9,8 @@ variable "cloudflare_account_id" {
   type        = string
 }
 
-variable "google_api_key" {
-  description = "Google Gemini API key"
+variable "openai_api_key" {
+  description = "OPENAI API key"
   type        = string
   sensitive   = true
 }
