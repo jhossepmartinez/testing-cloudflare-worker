@@ -2,7 +2,6 @@ import { drizzle, DrizzleD1Database } from "drizzle-orm/d1";
 import { qaHistory } from "./db/schema";
 import OpenAI from "openai";
 import jwt from "@tsndr/cloudflare-worker-jwt";
-import { is } from "drizzle-orm";
 
 interface Env {
   DB: DrizzleD1Database;
