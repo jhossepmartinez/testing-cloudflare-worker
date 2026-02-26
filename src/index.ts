@@ -1,7 +1,7 @@
 import { drizzle, DrizzleD1Database } from "drizzle-orm/d1";
 import { qaHistory } from "./db/schema";
 import OpenAI from "openai";
-import jwt from "@tsndr/cloudflare-worker-jwt";
+import jwt, { JwtPayload } from "@tsndr/cloudflare-worker-jwt";
 
 interface Env {
   DB: DrizzleD1Database;
@@ -13,6 +13,10 @@ interface Env {
 
 type Ctx = {
   waitUntil: (...args: any) => void;
+};
+
+type CustomJwtPayload = JwtPayload & {
+  username: string;
 };
 
 let openai: OpenAI;
@@ -110,6 +114,11 @@ export default {
       if (!isValid)
         return new Response("Unauthorized: Invalid token", { status: 403 });
 
+      const { payload } = jwt.decode(token) as { payload: CustomJwtPayload };
+
+      const userId = payload.sub;
+      const username = payload.username;
+
       const question = url.searchParams.get("question");
 
       if (!question)
@@ -135,7 +144,11 @@ export default {
             status: 422,
           });
 
-        ctx.waitUntil(db.insert(qaHistory).values({ question, answer }));
+        ctx.waitUntil(
+          db
+            .insert(qaHistory)
+            .values({ question, answer, sub: userId, username }),
+        );
 
         return new Response(answer, { status: 200 });
       } catch (exception) {
