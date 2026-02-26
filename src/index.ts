@@ -101,7 +101,7 @@ export default {
         return new Response("Missing Authorization header", { status: 401 });
       if (
         !authHeader.startsWith("Bearer ") ||
-        !(authHeader.split(" ").length !== 2)
+        authHeader.split(" ").length !== 2
       )
         return new Response("Invalid Authorization header", { status: 401 });
 
