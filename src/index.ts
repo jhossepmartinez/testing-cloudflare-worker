@@ -4,12 +4,14 @@ import OpenAI from "openai";
 
 interface Env {
   DB: DrizzleD1Database;
-  OPENAI_API_KEY?: string;
+  OPENAI_API_KEY: string;
 }
 
 type Ctx = {
   waitUntil: (...args: any) => void;
 };
+
+let openai: OpenAI;
 
 export default {
   async fetch(request: Request, env: Env, ctx: Ctx) {
@@ -21,19 +23,16 @@ export default {
         status: 400,
       });
 
-    const client = new OpenAI();
-    // apiKey: env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,
+    // Lazy-init: safe for concurrent requests since JS is single-threaded
+    // within an isolate. Each isolate gets its own instance.
+    openai ??= new OpenAI({ apiKey: env.OPENAI_API_KEY });
     const db = drizzle(env.DB);
 
     try {
-      const response = await client.chat.completions.create({
+      const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "user",
-            content: question,
-          },
-        ],
+        max_tokens: 512,
+        messages: [{ role: "user", content: question }],
       });
 
       const answer = response.choices[0]?.message?.content;
@@ -43,8 +42,7 @@ export default {
           status: 422,
         });
 
-      // Fire-and-forget: don't block the response on the DB write.
-      // waitUntil keeps the worker alive to finish the write after responding.
+      // Fire-and-forget: respond immediately, write to D1 in the background.
       ctx.waitUntil(db.insert(qaHistory).values({ question, answer }));
 
       return new Response(answer, { status: 200 });
