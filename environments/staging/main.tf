@@ -55,6 +55,11 @@ module "worker" {
       text = var.gh_client_secret
     },
     {
+      name = "JWT_SECRET"
+      type = "secret_text"
+      text = var.jwt_secret
+    },
+    {
       name = "DB"
       type = "d1"
       id   = cloudflare_d1_database.this.id
