@@ -23,7 +23,6 @@ export default {
     try {
       const response = await client.responses.create({
         model: "gpt-5-nano",
-        tools: [{ type: "web_search" }],
         input: question,
       });
 
