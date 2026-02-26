@@ -23,14 +23,13 @@ export default {
         status: 400,
       });
 
-    // Lazy-init: safe for concurrent requests since JS is single-threaded
-    // within an isolate. Each isolate gets its own instance.
-    openai ??= new OpenAI({ apiKey: env.OPENAI_API_KEY });
+    if (!openai) openai = new OpenAI();
+
     const db = drizzle(env.DB);
 
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-5-nano",
         max_tokens: 512,
         messages: [{ role: "user", content: question }],
       });
@@ -42,7 +41,6 @@ export default {
           status: 422,
         });
 
-      // Fire-and-forget: respond immediately, write to D1 in the background.
       ctx.waitUntil(db.insert(qaHistory).values({ question, answer }));
 
       return new Response(answer, { status: 200 });
