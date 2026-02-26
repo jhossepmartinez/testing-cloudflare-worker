@@ -125,8 +125,8 @@ export default {
       try {
         const response = await openai.chat.completions.create({
           model: "gpt-5-nano",
-          max_tokens: 512,
           messages: [{ role: "user", content: question }],
+          max_completion_tokens: 500,
         });
 
         const answer = response.choices[0]?.message?.content;
