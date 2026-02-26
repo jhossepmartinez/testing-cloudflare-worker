@@ -60,6 +60,14 @@ module "worker" {
       text = var.jwt_secret
     },
     {
+      name = "RATE_LIMIT"
+      type = "ratelimit"
+      simple = {
+        limit  = 5
+        period = 60
+      }
+    },
+    {
       name = "DB"
       type = "d1"
       id   = cloudflare_d1_database.this.id

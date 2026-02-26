@@ -9,6 +9,7 @@ interface Env {
   GH_CLIENT_ID: string;
   GH_CLIENT_SECRET: string;
   JWT_SECRET: string;
+  RATE_LIMIT: any;
 }
 
 type Ctx = {
@@ -118,6 +119,12 @@ export default {
 
       const userId = payload.sub;
       const username = payload.username;
+
+      const { success } = await env.RATE_LIMIT.limit({ key: userId });
+      if (!success)
+        return new Response(`Rate limit exceeded for ${username} (${userId})`, {
+          status: 429,
+        });
 
       const question = url.searchParams.get("question");
 
