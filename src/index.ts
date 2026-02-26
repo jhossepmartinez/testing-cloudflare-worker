@@ -3,8 +3,8 @@ import { qaHistory } from "./db/schema";
 import OpenAI from "openai";
 
 interface Env {
-  GOOGLE_API_KEY: string;
   DB: DrizzleD1Database;
+  OPENAI_API_KEY?: string;
 }
 
 export default {
@@ -18,15 +18,21 @@ export default {
       });
 
     const client = new OpenAI();
+    // apiKey: env.OPENAI_API_KEY || process.env.OPENAI_API_KEY,
     const db = drizzle(env.DB);
 
     try {
-      const response = await client.responses.create({
+      const response = await client.chat.completions.create({
         model: "gpt-5-nano",
-        input: question,
+        messages: [
+          {
+            role: "user",
+            content: question,
+          },
+        ],
       });
 
-      const answer = response.output_text;
+      const answer = response.choices[0]?.message?.content;
 
       if (!answer)
         return new Response("The AI could not generate a response.", {
