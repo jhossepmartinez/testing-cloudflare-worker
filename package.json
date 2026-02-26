@@ -16,6 +16,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@tsndr/cloudflare-worker-jwt": "^3.2.1",
     "drizzle-orm": "^0.45.1",
     "openai": "^6.25.0"
   },

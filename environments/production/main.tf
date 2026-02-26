@@ -45,6 +45,16 @@ module "worker" {
       text = var.openai_api_key
     },
     {
+      name = "GH_CLIENT_ID"
+      type = "secret_text"
+      text = var.gh_client_id
+    },
+    {
+      name = "GH_CLIENT_SECRET"
+      type = "secret_text"
+      text = var.gh_client_secret
+    },
+    {
       name = "DB"
       type = "d1"
       id   = cloudflare_d1_database.this.id
