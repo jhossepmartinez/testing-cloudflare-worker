@@ -7,8 +7,12 @@ interface Env {
   OPENAI_API_KEY?: string;
 }
 
+type Ctx = {
+  waitUntil: (...args: any) => void;
+};
+
 export default {
-  async fetch(request: Request, env: Env) {
+  async fetch(request: Request, env: Env, ctx: Ctx) {
     const url = new URL(request.url);
     const question = url.searchParams.get("question");
 
@@ -23,7 +27,7 @@ export default {
 
     try {
       const response = await client.chat.completions.create({
-        model: "gpt-5-nano",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "user",
@@ -39,7 +43,9 @@ export default {
           status: 422,
         });
 
-      await db.insert(qaHistory).values({ question, answer });
+      // Fire-and-forget: don't block the response on the DB write.
+      // waitUntil keeps the worker alive to finish the write after responding.
+      ctx.waitUntil(db.insert(qaHistory).values({ question, answer }));
 
       return new Response(answer, { status: 200 });
     } catch (exception) {
