@@ -1,6 +1,6 @@
-import { GoogleGenAI, HarmBlockThreshold, HarmCategory } from "@google/genai";
 import { drizzle, DrizzleD1Database } from "drizzle-orm/d1";
 import { qaHistory } from "./db/schema";
+import OpenAI from "openai";
 
 interface Env {
   GOOGLE_API_KEY: string;
@@ -17,36 +17,17 @@ export default {
         status: 400,
       });
 
-    const ai = new GoogleGenAI({ apiKey: env.GOOGLE_API_KEY });
+    const client = new OpenAI();
     const db = drizzle(env.DB);
 
     try {
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: question,
-        config: {
-          safetySettings: [
-            {
-              category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-              threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-            },
-            {
-              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-              threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-            },
-            {
-              category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-              threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-            },
-            {
-              category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-              threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-            },
-          ],
-        },
+      const response = await client.responses.create({
+        model: "gpt-5-nano",
+        input: question,
       });
 
-      const answer = response.text;
+      const answer = response.output_text;
+
       if (!answer)
         return new Response("The AI could not generate a response.", {
           status: 422,
