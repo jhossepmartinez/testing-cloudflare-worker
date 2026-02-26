@@ -1,0 +1,73 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    # workflows: ["Deploy to Staging"]
+    # types: [completed]
+    # branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy (Terraform + Migrate)
+    runs-on: ubuntu-latest
+    # Only run when staging succeeded AND a human has approved via the
+    # "production" GitHub environment protection rule.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: production
+    env:
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TF_VAR_google_api_key: ${{ secrets.GOOGLE_API_KEY }}
+      TF_VAR_main_module_path: ${{ github.workspace }}/dist/index.js
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Re-download the dist artifact produced by the staging build so we
+      # deploy the exact same bundle that was tested in staging.
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: true
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: environments/production
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: environments/production
+
+      - name: Get D1 database ID from Terraform output
+        id: tf_output
+        run: |
+          DB_ID=$(terraform output -raw d1_database_id)
+          echo "d1_database_id=$DB_ID" >> "$GITHUB_OUTPUT"
+        working-directory: environments/production
+
+      - name: Run DB Migrations
+        run: npm run db:migrate
+        env:
+          TF_VAR_cloudflare_d1_database_id: ${{ steps.tf_output.outputs.d1_database_id }}
+          TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
