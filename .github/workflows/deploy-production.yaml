@@ -2,9 +2,9 @@ name: Deploy to Production
 
 on:
   workflow_run:
-    # workflows: ["Deploy to Staging"]
-    # types: [completed]
-    # branches: [main]
+    workflows: ["Deploy to Staging"]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: read
