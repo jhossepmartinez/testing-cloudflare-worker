@@ -61,6 +61,7 @@ module "worker" {
     },
     {
       name = "RATE_LIMIT"
+      namespace_id = "ratelimit-staging"
       type = "ratelimit"
       simple = {
         limit  = 5
