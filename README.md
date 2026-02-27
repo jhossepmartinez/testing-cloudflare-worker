@@ -72,7 +72,7 @@ Create 2 environments in your GitHub repository: one named `staging` and the oth
 | `GH_CLIENT_SECRET`               | The GitHub OAuth app client secret                          |
 | `JWT_SECRET`                     | Secret used for hashing the JWT tokens (must be unique per env) |
 | `OPENAI_API_KEY`                 | OpenAI API key (ensure sufficient quota/budget)             |
-| `TF_API_TOKEN`                   | Terraform Cloud API token (can be the same for both envs)   |
+| `TF_API_TOKEN`                   | Terraform Cloud API user token (can be the same for both envs)   |
 
 ---
 
