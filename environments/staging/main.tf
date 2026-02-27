@@ -60,9 +60,9 @@ module "worker" {
       text = var.jwt_secret
     },
     {
-      name = "RATE_LIMIT"
-      namespace_id = "ratelimit-staging"
-      type = "ratelimit"
+      name         = "RATE_LIMIT"
+      namespace_id = "1101"
+      type         = "ratelimit"
       simple = {
         limit  = 5
         period = 60

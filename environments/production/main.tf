@@ -61,7 +61,7 @@ module "worker" {
     },
     {
       name         = "RATE_LIMIT"
-      namespace_id = "ratelimit-production"
+      namespace_id = "1100"
       type         = "ratelimit"
       simple = {
         limit  = 5
