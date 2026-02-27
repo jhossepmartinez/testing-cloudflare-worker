@@ -4,7 +4,7 @@ A serverless Q&A API built with TypeScript, OpenAI, Drizzle ORM, and deployed to
 
 ---
 
-## 📦 Features
+## Features
 
 - **Staging vs Production**: Isolated environments for safety, reduced blast radius, and integrity
 - **Infrastructure-as-Code**: Full worker and database provisioning via Terraform modules ([terraform-cloudflare-worker](https://github.com/jhossepmartinez/terraform-cloudflare-worker))
@@ -20,7 +20,7 @@ A serverless Q&A API built with TypeScript, OpenAI, Drizzle ORM, and deployed to
 
 ---
 
-## ⚠️ Required Cloudflare Features
+## Required Cloudflare Features
 
 Before deploying, you **must** manually enable the following features in your Cloudflare account (for both staging and production environments):
 
@@ -33,7 +33,7 @@ These features cannot be provisioned automatically and must be set up in your Cl
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 - TypeScript Cloudflare Worker (`src/`) — entrypoint, routing, handlers
 - Secrets and environmental configs passed via Terraform to Cloudflare
@@ -43,7 +43,7 @@ These features cannot be provisioned automatically and must be set up in your Cl
 
 ---
 
-## 🚀 Deployment Guide
+## Deployment Guide
 
 ### Prerequisites
 
@@ -124,7 +124,7 @@ drizzle/
 
 ---
 
-## 🧑‍💻 OAuth Setup & Auth Flow
+## OAuth Setup & Auth Flow
 
 **After your first successful deployment, you must configure each environment’s GitHub OAuth App settings as follows:**
 
@@ -149,7 +149,7 @@ drizzle/
 
 ---
 
-## 📊 Observability
+## Observability
 
 - **Analytics**: Every `/ask` is logged to Cloudflare Analytics Engine
 - **Rate Limiting**: Enforced by binding—5 questions per 60s per user
@@ -158,7 +158,7 @@ drizzle/
 
 ---
 
-## 🔐 Security & Tradeoffs
+## Security & Tradeoffs
 
 - **Zero hardcoded secrets** — Everything is secret_text binding
 - **No manual deployments** — All provisioning is CI/CD pipeline enforced
@@ -169,7 +169,7 @@ drizzle/
 
 ---
 
-## 📝 Schema
+## Schema
 
 `qa_history` table:
 
@@ -184,7 +184,7 @@ drizzle/
 
 ---
 
-## 💡 Lessons & Design Choices
+## Lessons & Design Choices
 
 - **CI/CD separation with approvals** ensures buggy code never hits production without human review.
 - **Stateful D1 DB** enables durable history and auditability across envs.
@@ -194,7 +194,7 @@ drizzle/
 
 ---
 
-## 📚 References
+## References
 
 - [Cloudflare Workers Docs](https://developers.cloudflare.com/workers/)
 - [Cloudflare D1 (DB) Docs](https://developers.cloudflare.com/d1/)
