@@ -21,10 +21,11 @@
     "openai": "^6.25.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260226.1",
     "dotenv": "^17.3.1",
     "dotenv-cli": "^11.0.0",
     "drizzle-kit": "^0.31.9",
     "esbuild": "0.27.3",
-    "tsx": "^4.21.0"
+    "globals": "^17.3.0"
   }
 }

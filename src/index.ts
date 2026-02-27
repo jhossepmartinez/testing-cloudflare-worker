@@ -2,19 +2,22 @@ import { drizzle, DrizzleD1Database } from "drizzle-orm/d1";
 import { qaHistory } from "./db/schema";
 import OpenAI from "openai";
 import jwt, { JwtPayload } from "@tsndr/cloudflare-worker-jwt";
+import type {
+  D1Database,
+  ExecutionContext,
+  RateLimit,
+} from "@cloudflare/workers-types";
+import type { AnalyticsEngineDataset } from "@cloudflare/workers-types";
 
 interface Env {
-  DB: DrizzleD1Database;
+  DB: D1Database;
   OPENAI_API_KEY: string;
   GH_CLIENT_ID: string;
   GH_CLIENT_SECRET: string;
   JWT_SECRET: string;
-  RATE_LIMIT: any;
+  RATE_LIMIT: RateLimit;
+  ANALYTICS: AnalyticsEngineDataset;
 }
-
-type Ctx = {
-  waitUntil: (...args: any) => void;
-};
 
 type CustomJwtPayload = JwtPayload & {
   username: string;
@@ -23,7 +26,7 @@ type CustomJwtPayload = JwtPayload & {
 let openai: OpenAI;
 
 export default {
-  async fetch(request: Request, env: Env, ctx: Ctx) {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url);
     const route = url.pathname;
 
@@ -121,10 +124,17 @@ export default {
       const username = payload.username;
 
       const { success } = await env.RATE_LIMIT.limit({ key: userId });
-      if (!success)
+      if (!success) {
+        env.ANALYTICS.writeDataPoint({
+          blobs: ["rate_limit_exceeded", username, userId],
+          doubles: [1],
+          indexes: [userId],
+        });
+
         return new Response(`Rate limit exceeded for ${username} (${userId})`, {
           status: 429,
         });
+      }
 
       const question = url.searchParams.get("question");
 
@@ -157,9 +167,21 @@ export default {
             .values({ question, answer, sub: userId, username }),
         );
 
+        env.ANALYTICS.writeDataPoint({
+          blobs: ["ask_success", username, userId],
+          doubles: [1, response.usage?.total_tokens ?? 0],
+          indexes: [userId],
+        });
+
         return new Response(answer, { status: 200 });
       } catch (exception) {
         console.error("Message generation failed:", exception);
+        env.ANALYTICS.writeDataPoint({
+          blobs: ["ask_error", username, userId, String(exception)],
+          doubles: [1],
+          indexes: [userId],
+        });
+
         return new Response(
           "Something went wrong while handling your question.",
           { status: 500 },

@@ -72,6 +72,12 @@ module "worker" {
       name = "DB"
       type = "d1"
       id   = cloudflare_d1_database.this.id
+    },
+    {
+      name    = "ANALYTICS"
+      type    = "analytics_engine"
+      dataset = "engine"
     }
+
   ]
 }
