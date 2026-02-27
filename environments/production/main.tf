@@ -76,8 +76,7 @@ module "worker" {
     {
       name    = "ANALYTICS"
       type    = "analytics_engine"
-      dataset = "engine"
+      dataset = "analytics-engine-production"
     }
-
   ]
 }
