@@ -152,7 +152,7 @@ drizzle/
 ## Observability
 
 - **Analytics**: Every `/ask` is logged to Cloudflare Analytics Engine
-- **Rate Limiting**: Enforced by binding—5 questions per 60s per user
+- **Rate Limiting**: Enforced by binding. 5 questions per 60s per user
 - **Error Logging**: All exceptions and auth errors printed to logs
 - **DB Auditing**: Every question+answer is persisted to durable D1 table
 
