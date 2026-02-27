@@ -6,7 +6,6 @@ terraform {
       name = "answer-me-staging"
     }
   }
-
   required_version = ">= 1.5"
 
   required_providers {
