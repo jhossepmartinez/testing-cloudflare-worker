@@ -1,4 +1,4 @@
-import { drizzle, DrizzleD1Database } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/d1";
 import { qaHistory } from "./db/schema";
 import OpenAI from "openai";
 import jwt, { JwtPayload } from "@tsndr/cloudflare-worker-jwt";
@@ -40,7 +40,6 @@ export default {
       if (!code) return new Response("Missing code", { status: 400 });
 
       try {
-        // Exchange the code for an Access Token
         const tokenResponse = await fetch(
           "https://github.com/login/oauth/access_token",
           {
@@ -64,7 +63,6 @@ export default {
           return new Response("Failed to get access token", { status: 401 });
         }
 
-        // Fetch user details from GitHub (Optional but recommended to embed user ID in JWT)
         const userResponse = await fetch("https://api.github.com/user", {
           headers: {
             Authorization: `Bearer ${tokenData.access_token}`,
@@ -76,7 +74,6 @@ export default {
           login: string;
         };
 
-        // Sign the JWT
         const token = await jwt.sign(
           {
             sub: userData.id.toString(),
@@ -86,7 +83,6 @@ export default {
           env.JWT_SECRET,
         );
 
-        // Return the token (You could also set this as an HttpOnly cookie)
         return new Response(
           JSON.stringify({
             token,
