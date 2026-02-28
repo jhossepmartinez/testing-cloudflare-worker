@@ -137,7 +137,7 @@ export const handleHistory = async (
       Array.isArray(history) ? history.length : 0,
     );
 
-    return new Response(JSON.stringify(history), {
+    return new Response(JSON.stringify({ data: history }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
