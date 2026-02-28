@@ -86,7 +86,6 @@ export const handleAsk = async (
       max_completion_tokens: CONFIG.AI.MAX_TOKENS,
       reasoning_effort: "minimal",
     });
-    console.log("response:", response);
 
     const answer = response.choices[0]?.message?.content;
     if (!answer)
