@@ -52,6 +52,10 @@ export const handleAsk = async (
   ctx: ExecutionContext,
 ): Promise<Response> => {
   const authHeader = request.headers.get("Authorization");
+  if (!authHeader)
+    return new Response(
+      "Missing required Authorization header, go to /login to get an authorization code.",
+    );
   if (!authHeader?.startsWith("Bearer ")) {
     return new Response("Invalid Authorization header", { status: 401 });
   }
