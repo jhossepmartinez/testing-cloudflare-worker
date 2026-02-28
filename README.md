@@ -13,7 +13,7 @@ A serverless Q&A API built with TypeScript, OpenAI, Drizzle ORM, and deployed to
 - **OpenAI Integration**: Ask questions, get AI-powered answers
 - **Rate Limits**: Configurable, enforced via Cloudflare's built-in mechanisms
 - **Database**: Durable storage via Cloudflare D1 + Drizzle ORM migrations
-- **Observability**: Analytics logged to Cloudflare Analytics Engine, full logging on failures, rate limits, and questions
+- **Observability**: Analytics logged to Cloudflare Analytics Engine, full logging on failures, rate limits, questions, and history access
 - **CI/CD**: Automated builds and promotions driven only by GitHub Actions workflows
 - **Secret Management**: Environment variables and secrets are sourced from GitHub environment stores and never hardcoded
 - **Tradeoffs Documented**: All design decisions favor security and safety
@@ -115,12 +115,22 @@ environments/
       └── main.tf
 src/
   ├── index.ts           # Router entrypoint
-  ├── handlers.ts        # /login, /callback, /ask logic
+  ├── handlers.ts        # /login, /callback, /ask, /history logic
   ├── factories/
   └── db/
 drizzle/
   └── ...                # DB migration history
 ```
+
+---
+
+## API Endpoints
+
+- `GET /login` – Redirects user to start GitHub OAuth.
+- `GET /callback` – Handles OAuth callback, issues JWT. (internal)
+- `GET /ask?question=...` – (Authorized, Bearer JWT in header) Ask a question, returns answer as plain text.
+- `GET /history` – (Authorized, Bearer JWT in header) Returns all of the user’s questions & answers as JSON array, most recent first.
+
 
 ---
 

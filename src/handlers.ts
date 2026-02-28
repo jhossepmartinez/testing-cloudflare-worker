@@ -109,3 +109,44 @@ export const handleAsk = async (
     });
   }
 };
+
+export const handleHistory = async (
+  request: Request,
+  env: Environment,
+  ctx: ExecutionContext,
+): Promise<Response> => {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response("Invalid Authorization header", { status: 401 });
+  }
+
+  const token = authHeader.split(" ")[1];
+  const isValid = await jwt.verify(token, env.JWT_SECRET);
+  if (!isValid)
+    return new Response("Unauthorized: Invalid token", { status: 403 });
+
+  const { payload } = jwt.decode(token) as { payload: CustomJwtPayload };
+  const { sub: userId, username } = payload;
+
+  const logger = createAnalyticsLogger(env.ANALYTICS);
+  const repo = createQuestionRepository(env.DB, ctx);
+
+  try {
+    const history = await repo.getUserHistory(userId);
+    logger.historySuccess(
+      userId,
+      username,
+      Array.isArray(history) ? history.length : 0,
+    );
+
+    return new Response(JSON.stringify(history), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    logger.historyError(userId, username, error);
+    return new Response("Failed to fetch history", {
+      status: 500,
+    });
+  }
+};

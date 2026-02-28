@@ -17,4 +17,16 @@ export const createAnalyticsLogger = (analytics: AnalyticsEngineDataset) => ({
       doubles: [1],
       indexes: [userId],
     }),
+  historySuccess: (userId: string, username: string, numRecords: number) =>
+    analytics.writeDataPoint({
+      blobs: ["history_success", username, userId],
+      doubles: [1, numRecords],
+      indexes: [userId],
+    }),
+  historyError: (userId: string, username: string, error: unknown) =>
+    analytics.writeDataPoint({
+      blobs: ["history_error", username, userId, String(error)],
+      doubles: [1],
+      indexes: [userId],
+    }),
 });

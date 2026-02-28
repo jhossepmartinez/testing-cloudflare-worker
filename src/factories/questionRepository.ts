@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/d1";
+import { eq, desc } from "drizzle-orm";
 import { qaHistory } from "../db/schema";
 
 export const createQuestionRepository = (
@@ -19,6 +20,13 @@ export const createQuestionRepository = (
         .values({ question, answer, sub: userId, username });
 
       ctx.waitUntil(insertPromise);
+    },
+    getUserHistory: async (userId: string) => {
+      return orm
+        .select()
+        .from(qaHistory)
+        .where(eq(qaHistory.sub, userId))
+        .orderBy(desc(qaHistory.createdAt));
     },
   };
 };

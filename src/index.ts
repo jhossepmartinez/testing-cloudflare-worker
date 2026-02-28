@@ -1,6 +1,6 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
 import { Environment } from "./types";
-import { handleAsk, handleCallback, handleLogin } from "./handlers";
+import { handleAsk, handleCallback, handleLogin, handleHistory } from "./handlers";
 
 export default {
   async fetch(
@@ -17,6 +17,8 @@ export default {
         return handleCallback(request, env);
       case "/ask":
         return handleAsk(request, env, ctx);
+      case "/history":
+        return handleHistory(request, env, ctx);
       default:
         return new Response("Not Found", { status: 404 });
     }
