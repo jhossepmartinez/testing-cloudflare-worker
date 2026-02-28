@@ -84,6 +84,7 @@ export const handleAsk = async (
       model: CONFIG.AI.MODEL,
       messages: [{ role: "user", content: question }],
       max_completion_tokens: CONFIG.AI.MAX_TOKENS,
+      reasoning_effort: "none",
     });
     console.log("response:", response);
 
