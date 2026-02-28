@@ -24,8 +24,6 @@ export const handleCallback = async (
     const githubToken = await github.exchangeCodeForToken(code);
     const userData = await github.getUserProfile(githubToken);
 
-    console.log("handleCallback - env.JWT_SECRET:", env.JWT_SECRET);
-
     const token = await jwt.sign(
       {
         sub: userData.id.toString(),
@@ -59,7 +57,6 @@ export const handleAsk = async (
   }
 
   const token = authHeader.split(" ")[1];
-  console.log("handleAsk - env.JWT_SECRET:", env.JWT_SECRET);
   const isValid = await jwt.verify(token, env.JWT_SECRET);
   if (!isValid)
     return new Response("Unauthorized: Invalid token", { status: 403 });
@@ -88,6 +85,7 @@ export const handleAsk = async (
       messages: [{ role: "user", content: question }],
       max_completion_tokens: CONFIG.AI.MAX_TOKENS,
     });
+    console.log("response:", response);
 
     const answer = response.choices[0]?.message?.content;
     if (!answer)
