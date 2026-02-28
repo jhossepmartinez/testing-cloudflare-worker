@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.2.0](https://github.com/jhossepmartinez/testing-cloudflare-worker/compare/v2.1.0...v2.2.0) (2026-02-28)
+
+
+### Features
+
+* add analytics engine ([ea0e57c](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/ea0e57cd904add6ae22b8634ead3ec8aa9b7466a))
+* add history endpoint ([0544488](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/0544488fe36c6bb047968bb27e441eae12670698))
+* add rate limits ([39ea3bb](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/39ea3bb5db2ae6baac4de77701693a3d8060ec7d))
+* add readme ([7dff243](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/7dff243af5e9c4535114b26c9989a52428add494))
+* fixing envirionments ([8a5a51f](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/8a5a51f3f65dd10a882cf415787baf822d8ab4d9))
+* refactor code to use factories ([56b31ab](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/56b31ab293035c942548692c6e3067e562306b00))
+* rename analytics engine ([c4ba424](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/c4ba42435ac92eab437f501baaccbe94cf2ad677))
+
+
+### Bug Fixes
+
+* add tsconfig to include workers types ([6702b14](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/6702b142ecf81c2e81bc1fde6b7550ad756cba4c))
+* change none to minimal reasoning ([7f24f35](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/7f24f356061e2bc69e15612fd8f0599b4a2ecc52))
+* change string to number ([cb2b045](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/cb2b045cf98b90256234a2544dd80f3f2157918b))
+* missing namespace_id in rate limits ([3accab1](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/3accab172b40909fa3596ed4f249514e23b03d83))
+* remove reasoning from model call ([19ddd4f](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/19ddd4fa5ee3580a68a583e9ade628620599150a))
+
 ## [2.1.0](https://github.com/jhossepmartinez/testing-cloudflare-worker/compare/v2.0.0...v2.1.0) (2026-02-26)
 
 
