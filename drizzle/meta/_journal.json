@@ -15,6 +15,13 @@
       "when": 1772147077738,
       "tag": "0001_mushy_the_twelve",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1772547191435,
+      "tag": "0002_windy_turbo",
+      "breakpoints": true
     }
   ]
 }

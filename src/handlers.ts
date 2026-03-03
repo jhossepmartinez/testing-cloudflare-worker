@@ -14,6 +14,7 @@ export const handleLogin = (env: Environment): Response => {
 export const handleCallback = async (
   request: Request,
   env: Environment,
+  ctx: ExecutionContext,
 ): Promise<Response> => {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -32,6 +33,10 @@ export const handleCallback = async (
       },
       env.JWT_SECRET,
     );
+
+    const repo = createQuestionRepository(env.DB, ctx);
+    const user = repo.getUser(userData.id.toString());
+    if (!user) repo.saveUser(userData.login, userData.id.toString());
 
     return new Response(
       JSON.stringify({
@@ -67,15 +72,15 @@ export const handleAsk = async (
     return new Response("Unauthorized: Invalid token", { status: 403 });
 
   const { payload } = jwt.decode(token) as { payload: CustomJwtPayload };
-  const { sub: userId, username } = payload;
+  const { sub, username } = payload;
 
   const logger = createAnalyticsLogger(env.ANALYTICS);
 
   const { success: rateLimitSuccess } = await env.RATE_LIMIT.limit({
-    key: userId,
+    key: sub,
   });
   if (!rateLimitSuccess) {
-    logger.rateLimitExceeded(userId, username);
+    logger.rateLimitExceeded(sub, username);
     return new Response(`Rate limit exceeded`, { status: 429 });
   }
 
@@ -99,14 +104,16 @@ export const handleAsk = async (
       });
 
     const repo = createQuestionRepository(env.DB, ctx);
-    repo.saveHistoryInBackground(userId, username, question, answer);
+    const user = await repo.getUser(sub);
 
-    logger.askSuccess(userId, username, response.usage?.total_tokens ?? 0);
+    repo.saveHistoryInBackground(user.id, question, answer);
+
+    logger.askSuccess(sub, username, response.usage?.total_tokens ?? 0);
 
     return new Response(answer, { status: 200 });
   } catch (error) {
     console.error("Message generation failed:", error);
-    logger.askError(userId, username, error);
+    logger.askError(sub, username, error);
     return new Response("Something went wrong handling your question.", {
       status: 500,
     });
@@ -129,15 +136,15 @@ export const handleHistory = async (
     return new Response("Unauthorized: Invalid token", { status: 403 });
 
   const { payload } = jwt.decode(token) as { payload: CustomJwtPayload };
-  const { sub: userId, username } = payload;
+  const { sub, username } = payload;
 
   const logger = createAnalyticsLogger(env.ANALYTICS);
   const repo = createQuestionRepository(env.DB, ctx);
 
   try {
-    const history = await repo.getUserHistory(userId);
+    const history = await repo.getUserHistory(sub);
     logger.historySuccess(
-      userId,
+      sub,
       username,
       Array.isArray(history) ? history.length : 0,
     );
@@ -147,7 +154,7 @@ export const handleHistory = async (
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    logger.historyError(userId, username, error);
+    logger.historyError(sub, username, error);
     return new Response("Failed to fetch history", {
       status: 500,
     });

@@ -1,6 +1,11 @@
 import type { ExecutionContext } from "@cloudflare/workers-types";
 import { Environment } from "./types";
-import { handleAsk, handleCallback, handleLogin, handleHistory } from "./handlers";
+import {
+  handleAsk,
+  handleCallback,
+  handleLogin,
+  handleHistory,
+} from "./handlers";
 
 export default {
   async fetch(
@@ -14,7 +19,7 @@ export default {
       case "/login":
         return handleLogin(env);
       case "/callback":
-        return handleCallback(request, env);
+        return handleCallback(request, env, ctx);
       case "/ask":
         return handleAsk(request, env, ctx);
       case "/history":

@@ -1,32 +1,45 @@
 import { drizzle } from "drizzle-orm/d1";
 import { eq, desc } from "drizzle-orm";
-import { qaHistory } from "../db/schema";
+import { qaHistory, users } from "../db/schema";
+import * as schema from "../db/schema";
+import * as relations from "../db/relations";
 
 export const createQuestionRepository = (
   db: D1Database,
   ctx: ExecutionContext,
 ) => {
-  const orm = drizzle(db);
+  const orm = drizzle(db, { schema: { ...schema, ...relations } });
 
   return {
     saveHistoryInBackground: (
-      userId: string,
-      username: string,
+      userId: number,
       question: string,
       answer: string,
     ) => {
       const insertPromise = orm
         .insert(qaHistory)
-        .values({ question, answer, sub: userId, username });
+        .values({ question, answer, userId });
 
       ctx.waitUntil(insertPromise);
     },
-    getUserHistory: async (userId: string) => {
-      return orm
-        .select()
-        .from(qaHistory)
-        .where(eq(qaHistory.sub, userId))
-        .orderBy(desc(qaHistory.createdAt));
+    getUserHistory: async (sub: string) => {
+      return await orm.query.users.findFirst({
+        where: eq(users.sub, sub),
+        with: {
+          qaHistory: {
+            orderBy: [desc(qaHistory.createdAt)],
+          },
+        },
+      });
+    },
+    getUser: async (sub: string) => {
+      const user = orm.select().from(users).where(eq(users.sub, sub)).get();
+      if (!user) return null;
+      return user;
+    },
+    saveUser: (username: string, sub: string) => {
+      const insertPromise = orm.insert(users).values({ sub, username });
+      ctx.waitUntil(insertPromise);
     },
   };
 };

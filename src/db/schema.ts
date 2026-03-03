@@ -8,6 +8,11 @@ export const qaHistory = sqliteTable("qa_history", {
   createdAt: text("created_at")
     .notNull()
     .default(sql`(current_timestamp)`),
+  userId: integer("user_id").references(() => users.id),
+});
+
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().default("[Missing username]"),
-  sub: text("sub").notNull().default("[Missing sub]"),
+  sub: text("sub").notNull().unique(),
 });
