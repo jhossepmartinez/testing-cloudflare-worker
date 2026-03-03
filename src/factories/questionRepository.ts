@@ -23,7 +23,7 @@ export const createQuestionRepository = (
       ctx.waitUntil(insertPromise);
     },
     getUserHistory: async (sub: string) => {
-      return await orm.query.users.findFirst({
+      const userHistory = await orm.query.users.findFirst({
         where: eq(users.sub, sub),
         with: {
           qaHistory: {
@@ -31,6 +31,7 @@ export const createQuestionRepository = (
           },
         },
       });
+      return userHistory.qaHistory;
     },
     getUser: async (sub: string) => {
       const user = await orm
