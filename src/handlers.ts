@@ -35,7 +35,7 @@ export const handleCallback = async (
     );
 
     const repo = createQuestionRepository(env.DB, ctx);
-    const user = repo.getUser(userData.id.toString());
+    const user = await repo.getUser(userData.id.toString());
     if (!user) repo.saveUser(userData.login, userData.id.toString());
 
     return new Response(

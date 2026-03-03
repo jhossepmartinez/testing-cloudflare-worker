@@ -33,7 +33,11 @@ export const createQuestionRepository = (
       });
     },
     getUser: async (sub: string) => {
-      const user = orm.select().from(users).where(eq(users.sub, sub)).get();
+      const user = await orm
+        .select()
+        .from(users)
+        .where(eq(users.sub, sub))
+        .get();
       if (!user) return null;
       return user;
     },
