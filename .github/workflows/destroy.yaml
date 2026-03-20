@@ -1,0 +1,49 @@
+name: destroy environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Environment to destroy
+        options:
+        - staging
+        - production
+        required: true
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    environment: {{ inputs.environment }}
+    env:
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TF_VAR_google_api_key: ${{ secrets.GOOGLE_API_KEY }}
+      TF_VAR_main_module_path: dist/index.js
+      TF_VAR_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+      TF_VAR_gh_client_id: ${{ secrets.GH_CLIENT_ID }}
+      TF_VAR_gh_client_secret: ${{ secrets.GH_CLIENT_SECRET }}
+      TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Mock dist for terraform validation
+        run: |
+          mkdir -p environments/${{ inputs.environment }}/dist
+          touch environments/${{ inputs.environment }}/dist/index.js
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: true
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: environments/${{ inputs.environment }}
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: environments/${{ inputs.environment }}
+
