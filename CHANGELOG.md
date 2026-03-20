@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.2.0](https://github.com/jhossepmartinez/testing-cloudflare-worker/compare/v2.1.0...v2.2.0) (2026-03-20)
+
+
+### Features
+
+* add analytics engine ([ea0e57c](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/ea0e57cd904add6ae22b8634ead3ec8aa9b7466a))
+* add history endpoint ([0544488](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/0544488fe36c6bb047968bb27e441eae12670698))
+* add rate limits ([39ea3bb](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/39ea3bb5db2ae6baac4de77701693a3d8060ec7d))
+* add readme ([7dff243](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/7dff243af5e9c4535114b26c9989a52428add494))
+* added environment deletion workflow ([db654d1](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/db654d1d2cfb13c1e28a7d0b40af8afceb9571e2))
+* fixing envirionments ([8a5a51f](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/8a5a51f3f65dd10a882cf415787baf822d8ab4d9))
+* normalize db ([0d04847](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/0d0484783a41e68f29859a0dc6cf932a71f3d55f))
+* refactor code to use factories ([56b31ab](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/56b31ab293035c942548692c6e3067e562306b00))
+* rename analytics engine ([c4ba424](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/c4ba42435ac92eab437f501baaccbe94cf2ad677))
+
+
+### Bug Fixes
+
+* add await in user queries ([eabd510](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/eabd510e3c913e1d4db9b9b76589b6c7fa318dc3))
+* add tsconfig to include workers types ([6702b14](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/6702b142ecf81c2e81bc1fde6b7550ad756cba4c))
+* change none to minimal reasoning ([7f24f35](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/7f24f356061e2bc69e15612fd8f0599b4a2ecc52))
+* change string to number ([cb2b045](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/cb2b045cf98b90256234a2544dd80f3f2157918b))
+* jiji ([5299fe3](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/5299fe35bd4d69131c6f04503ad829a3c73b0d7f))
+* make history return only the user history ([ff0e72c](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/ff0e72c76835436b06f75232eb11a6bf654d3adc))
+* missing namespace_id in rate limits ([3accab1](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/3accab172b40909fa3596ed4f249514e23b03d83))
+* remove reasoning from model call ([19ddd4f](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/19ddd4fa5ee3580a68a583e9ade628620599150a))
+* typo ([3cfe6ac](https://github.com/jhossepmartinez/testing-cloudflare-worker/commit/3cfe6ac93ddd7b111aa11a33e7f6eef6bbf3fbcb))
+
 ## [2.1.0](https://github.com/jhossepmartinez/testing-cloudflare-worker/compare/v2.0.0...v2.1.0) (2026-02-26)
 
 
